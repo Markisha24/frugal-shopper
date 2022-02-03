@@ -31,11 +31,11 @@
             android:layout_marginBottom="16dp"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="Price"
+            android:hint="Price ($)"
             android:inputType="numberDecimal" />
 
         <EditText
-            android:id="@+id/editTextNumberDecimal2"
+            android:id="@+id/editTextNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
@@ -43,10 +43,10 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="Pounds (lbs)"
-            android:inputType="numberDecimal" />
+            android:inputType="number" />
 
         <EditText
-            android:id="@+id/editTextNumberDecimal3"
+            android:id="@+id/editTextNumber2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
@@ -54,7 +54,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="Ounces (oz)"
-            android:inputType="numberDecimal" />
+            android:inputType="number" />
     </LinearLayout>
 
     <LinearLayout
@@ -72,18 +72,18 @@
             android:textSize="16sp" />
 
         <EditText
-            android:id="@+id/editTextNumberDecimal4"
+            android:id="@+id/editTextNumberDecimal2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="Price"
+            android:hint="Price ($)"
             android:inputType="numberDecimal" />
 
         <EditText
-            android:id="@+id/editTextNumberDecimal5"
+            android:id="@+id/editTextNumber3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
@@ -91,10 +91,10 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="Pounds (lbs)"
-            android:inputType="numberDecimal" />
+            android:inputType="number" />
 
         <EditText
-            android:id="@+id/editTextNumberDecimal6"
+            android:id="@+id/editTextNumber4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
@@ -102,7 +102,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="Ounces (oz)"
-            android:inputType="numberDecimal" />
+            android:inputType="number" />
     </LinearLayout>
 
     <LinearLayout
@@ -121,18 +121,18 @@
             android:textSize="16sp" />
 
         <EditText
-            android:id="@+id/editTextNumberDecimal7"
+            android:id="@+id/editTextNumberDecimal3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="Price"
+            android:hint="Price ($)"
             android:inputType="numberDecimal" />
 
         <EditText
-            android:id="@+id/editTextNumberDecimal8"
+            android:id="@+id/editTextNumber5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
@@ -140,10 +140,10 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="Pounds (lbs)"
-            android:inputType="numberDecimal" />
+            android:inputType="number" />
 
         <EditText
-            android:id="@+id/editTextNumberDecimal9"
+            android:id="@+id/editTextNumber6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
@@ -151,7 +151,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="Ounces (oz)"
-            android:inputType="numberDecimal" />
+            android:inputType="number" />
     </LinearLayout>
 
     <LinearLayout
@@ -177,7 +177,7 @@
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Best Buy: A"
+            android:text="Best Buy: "
             android:textSize="16sp" />
     </LinearLayout>
 

@@ -10,9 +10,28 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DecimalFormat;
-
 public class MainActivity extends AppCompatActivity {
+
+    private static final String DEBUG_TAG = "FrugalShopper";
+
+    private double priceA;
+    private double priceB;
+    private double priceC;
+
+    //Pounds
+    private int poundsA;
+    private int poundsB;
+    private int poundsC;
+
+    //Ounces
+    private int ouncesA;
+    private int ouncesB;
+    private int ouncesC;
+
+    //Unit Prices
+    private double unitPriceA;
+    private double unitPriceB;
+    private double unitPriceC;
 
     //Prices
     private EditText priceEditTextA;
@@ -36,8 +55,12 @@ public class MainActivity extends AppCompatActivity {
     private Button   compute;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(DEBUG_TAG, "MainActivity.onCreate()" );
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -45,13 +68,13 @@ public class MainActivity extends AppCompatActivity {
         priceEditTextB = findViewById( R.id.editTextNumberDecimal2 );
         priceEditTextC = findViewById( R.id.editTextNumberDecimal3 );
 
-        poundsEditTextA = findViewById( R.id.editTextNumberDecimal4 );
-        poundsEditTextB = findViewById( R.id.editTextNumberDecimal5 );
-        poundsEditTextC = findViewById( R.id.editTextNumberDecimal6 );
+        poundsEditTextA = findViewById( R.id.editTextNumber  );
+        poundsEditTextB = findViewById( R.id.editTextNumber3 );
+        poundsEditTextC = findViewById( R.id.editTextNumber5 );
 
-        ouncesEditTextA = findViewById( R.id.editTextNumberDecimal7 );
-        ouncesEditTextB = findViewById( R.id.editTextNumberDecimal8 );
-        ouncesEditTextC = findViewById( R.id.editTextNumberDecimal9 );
+        ouncesEditTextA = findViewById( R.id.editTextNumber2 );
+        ouncesEditTextB = findViewById( R.id.editTextNumber4);
+        ouncesEditTextC = findViewById( R.id.editTextNumber6 );
 
         bestBuyEditText = findViewById( R.id.textView4 );
         compute = findViewById( R.id.button );
@@ -63,102 +86,251 @@ public class MainActivity extends AppCompatActivity {
     private class ButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            //Prices
-            double priceA;
-            double priceB;
-            double priceC;
 
-            //Pounds
-            double poundsA;
-            double poundsB;
-            double poundsC;
+    /*--------------------------------------ROW A CALCULATIONS-------------------------------------------*/
+            //nothing provided in row A
+            if ((priceEditTextA.getText().toString().trim().equals(""))
+                    && (poundsEditTextA.getText().toString().trim().equals(""))
+                    && (ouncesEditTextA.getText().toString().trim().equals(""))){
 
-            //Ounces
-            double ouncesA;
-            double ouncesB;
-            double ouncesC;
+                unitPriceA = 0;
+            }
 
-            //Unit Prices
-            double unitPriceA;
-            double unitPriceB;
-            double unitPriceC;
-
-            //best item to buy
-            String bestBuy;
-
-            try {
-                //Prices
-                priceA = Double.parseDouble( priceEditTextA.getText().toString() );
-                priceB = Double.parseDouble( priceEditTextB.getText().toString() );
-                priceC = Double.parseDouble( priceEditTextC.getText().toString() );
-
-                //Pounds
-                poundsA = Double.parseDouble( poundsEditTextA.getText().toString() );
-                poundsB = Double.parseDouble( poundsEditTextB.getText().toString() );
-                poundsC = Double.parseDouble( poundsEditTextC.getText().toString() );
-
-                //Ounces
-                ouncesA = Double.parseDouble( ouncesEditTextA.getText().toString() );
-                ouncesB = Double.parseDouble( ouncesEditTextB.getText().toString() );
-                ouncesC = Double.parseDouble( ouncesEditTextC.getText().toString() );
-           }
-
-            catch( NumberFormatException nfe ) {
-                // This check is just a precaution, since the user will be able to enter only numbers
-                // into the EditText, as currently included in the layout (note the
-                // android:inputType="numberDecimal" attribute).
-                // However, we should have this check in case someone changes
-                // the layout and uses a more general EditTexts accepting any chars as input.
-
-                // Toast is a short message displayed to the user
-                Toast toast = Toast.makeText( getApplicationContext(),
-                        "Enter positive decimal values",
-                        Toast.LENGTH_SHORT );
+            //weights given but no price given
+            else if((priceEditTextA.getText().toString().trim().equals(""))) {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "A price must be entered for product A",
+                        Toast.LENGTH_SHORT);
                 toast.show();
-                bestBuyEditText.setText( "Best buy: " );
+                bestBuyEditText.setText("Best Buy: ");
                 return;
             }
 
-            //check if at least one product is entered
-            if(((priceA <= 0.0) & (poundsA <= 0.0) & (ouncesA <= 0.0))
-                    & ((priceB <= 0.0) & (poundsB <= 0.0) & (ouncesB <= 0.0))
-                    & ((priceC <= 0.0) & (poundsC <= 0.0) & (ouncesC <= 0.0)))
+            //price given but no weights given
+            else if(!(priceEditTextA.getText().toString().trim().equals(""))
+                    && (poundsEditTextA.getText().toString().trim().equals(""))
+                    && (ouncesEditTextA.getText().toString().trim().equals(""))) {
+
+                unitPriceA = 0;
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "Weights must be given for product A",
+                        Toast.LENGTH_SHORT);
+                toast.show();
+                bestBuyEditText.setText("Best Buy: ");
+                return;
+            }
+
+            //input is valid
+            else {
+                //weight given in pounds but not ounces
+                if(!(poundsEditTextA.getText().toString().trim().equals(""))
+                        && (ouncesEditTextA.getText().toString().trim().equals(""))) {
+
+                    priceA = Double.parseDouble(priceEditTextA.getText().toString());
+                    poundsA = Integer.parseInt(poundsEditTextA.getText().toString());
+                    ouncesA = 0;
+                }
+
+                //weight given in ounces but not pounds
+                else if((poundsEditTextA.getText().toString().trim().equals(""))
+                        && !(ouncesEditTextA.getText().toString().trim().equals(""))) {
+
+                    priceA = Double.parseDouble(priceEditTextA.getText().toString());
+                    poundsA = 0;
+                    ouncesA = Integer.parseInt(ouncesEditTextA.getText().toString());
+                }
+
+                //all fields provided
+                else {
+
+                    priceA = Double.parseDouble(priceEditTextA.getText().toString());
+                    poundsA = Integer.parseInt(poundsEditTextA.getText().toString());
+                    ouncesA = Integer.parseInt(ouncesEditTextA.getText().toString());
+                }
+
+                //calculating unit price for product A
+                unitPriceA = priceA / ((poundsA * 16) + ouncesA);
+                unitPriceA = Math.round(unitPriceA * 100.0) / 100.0;
+            }
+
+    /*--------------------------------------ROW B CALCULATIONS-------------------------------------------*/
+            //nothing provided in row B
+            if ((priceEditTextB.getText().toString().trim().equals(""))
+                    && (poundsEditTextB.getText().toString().trim().equals(""))
+                    && (ouncesEditTextB.getText().toString().trim().equals(""))){
+
+                unitPriceB = 0;
+            }
+
+            //weights given but no price given
+            else if((priceEditTextB.getText().toString().trim().equals(""))) {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "A price must be entered for product B",
+                        Toast.LENGTH_SHORT);
+                toast.show();
+                bestBuyEditText.setText("Best Buy: ");
+                return;
+            }
+
+            //price given but no weights given
+            else if(!(priceEditTextB.getText().toString().trim().equals(""))
+                    && (poundsEditTextB.getText().toString().trim().equals(""))
+                    && (ouncesEditTextB.getText().toString().trim().equals(""))) {
+
+                unitPriceB = 0;
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "Weights must be given for product B",
+                        Toast.LENGTH_SHORT);
+                toast.show();
+                bestBuyEditText.setText("Best Buy: ");
+                return;
+            }
+
+            //input is valid
+            else {
+                //weight given in pounds but not ounces
+                if(!(poundsEditTextB.getText().toString().trim().equals(""))
+                        && (ouncesEditTextB.getText().toString().trim().equals(""))) {
+
+                    priceB = Double.parseDouble(priceEditTextB.getText().toString());
+                    poundsB = Integer.parseInt(poundsEditTextB.getText().toString());
+                    ouncesB = 0;
+                }
+
+                //weight given in ounces but not pounds
+                else if((poundsEditTextB.getText().toString().trim().equals(""))
+                        && !(ouncesEditTextB.getText().toString().trim().equals(""))) {
+
+                    priceB = Double.parseDouble(priceEditTextB.getText().toString());
+                    poundsB = 0;
+                    ouncesB = Integer.parseInt(ouncesEditTextB.getText().toString());
+                }
+
+                //all fields provided
+                else {
+
+                    priceB = Double.parseDouble(priceEditTextB.getText().toString());
+                    poundsB = Integer.parseInt(poundsEditTextB.getText().toString());
+                    ouncesB = Integer.parseInt(ouncesEditTextB.getText().toString());
+                }
+
+                //calculating unit price for product A
+                unitPriceB = priceB / ((poundsB * 16) + ouncesB);
+                unitPriceB = Math.round(unitPriceB * 100.0) / 100.0;
+            }
+
+    /*--------------------------------------ROW C CALCULATIONS-------------------------------------------*/
+            //nothing provided in row C
+            if ((priceEditTextC.getText().toString().trim().equals(""))
+                    && (poundsEditTextC.getText().toString().trim().equals(""))
+                    && (ouncesEditTextC.getText().toString().trim().equals(""))){
+
+                unitPriceC = 0;
+            }
+
+            //weights given but no price given
+            else if((priceEditTextC.getText().toString().trim().equals(""))) {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "A price must be entered for product C",
+                        Toast.LENGTH_SHORT);
+                toast.show();
+                bestBuyEditText.setText("Best Buy: ");
+                return;
+            }
+
+            //price given but no weights given
+            else if(!(priceEditTextC.getText().toString().trim().equals(""))
+                    && (poundsEditTextC.getText().toString().trim().equals(""))
+                    && (ouncesEditTextC.getText().toString().trim().equals(""))) {
+
+                unitPriceC = 0;
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "Weights must be given for product C",
+                        Toast.LENGTH_SHORT);
+                toast.show();
+                bestBuyEditText.setText("Best Buy: ");
+                return;
+            }
+
+            //input is valid
+            else {
+                //weight given in pounds but not ounces
+                if(!(poundsEditTextC.getText().toString().trim().equals(""))
+                        && (ouncesEditTextC.getText().toString().trim().equals(""))) {
+
+                    priceC = Double.parseDouble(priceEditTextC.getText().toString());
+                    poundsC = Integer.parseInt(poundsEditTextC.getText().toString());
+                    ouncesC = 0;
+                }
+
+                //weight given in ounces but not pounds
+                else if((poundsEditTextC.getText().toString().trim().equals(""))
+                        && !(ouncesEditTextC.getText().toString().trim().equals(""))) {
+
+                    priceC = Double.parseDouble(priceEditTextC.getText().toString());
+                    poundsC = 0;
+                    ouncesC = Integer.parseInt(ouncesEditTextC.getText().toString());
+                }
+
+                //all fields provided
+                else {
+
+                    priceC = Double.parseDouble(priceEditTextC.getText().toString());
+                    poundsC = Integer.parseInt(poundsEditTextC.getText().toString());
+                    ouncesC = Integer.parseInt(ouncesEditTextC.getText().toString());
+                }
+
+                //calculating unit price for product A
+                unitPriceC = priceC / ((poundsC * 16) + ouncesC);
+                unitPriceC = Math.round(unitPriceC * 100.0) / 100.0;
+            }
+
+
+
+            //check if at least product is entered
+            if((unitPriceA <= 0) && (unitPriceB <= 0) && (unitPriceC <= 0)) {
+                Toast toast = Toast.makeText( getApplicationContext(),
+                        "At least one product must be entered",
+                        Toast.LENGTH_SHORT );
+                toast.show();
+                bestBuyEditText.setText("Best Buy: ");
+                return;
+            }
+
+            //comparing and finding minimum unit price
+            double[] unitPrices = new double[]{unitPriceA, unitPriceB, unitPriceC};
+            double minUnitPrice = Double.MAX_VALUE;
+            int index = 0;
+
+            for(int i = 0; i < unitPrices.length; i++)
             {
-                Toast toast = Toast.makeText( getApplicationContext(),
-                        "Enter at least one product",
-                        Toast.LENGTH_SHORT );
-                toast.show();
-                bestBuyEditText.setText( "Best buy: " );
-                return;
+                if((minUnitPrice >= unitPrices[i]) && (unitPrices[i] != 0.0)) {
+                    minUnitPrice = unitPrices[i];
+                    index = i;
+                }
             }
 
-            //No weight given, but price given
-            if(((priceA > 0.0) & (poundsA <= 0.0) & (ouncesA <= 0.0))
-                    || ((priceB > 0.0) & (poundsB <= 0.0) & (ouncesB <= 0.0))
-                    || ((priceC > 0.0) & (poundsC <= 0.0) & (ouncesC <= 0.0)))
-            {
-                Toast toast = Toast.makeText( getApplicationContext(),
-                        "Weights cannot be 0.00 for given price",
-                        Toast.LENGTH_SHORT );
-                toast.show();
-                bestBuyEditText.setText( "Best buy: " );
-                return;
+            //displaying best buy
+            switch(index) {
+                case 0:
+                    bestBuyEditText.setText("Best Buy: A");
+                    break;
+                case 1:
+                    bestBuyEditText.setText("Best Buy: B");
+                    break;
+                case 2:
+                    bestBuyEditText.setText("Best Buy: C");
+                    break;
+                default:
+                    bestBuyEditText.setText("Best Buy: ");
+                    Toast toast = Toast.makeText( getApplicationContext(),
+                            "Something went wrong! Please check inputs and try again.",
+                            Toast.LENGTH_SHORT );
+                    toast.show();
             }
-
-            //No price given, but weight given
-            if(((priceA <= 0.0) & (poundsA >= 0.0) & (ouncesA >= 0.0))
-                    || ((priceB <= 0.0) & (poundsB >= 0.0) & (ouncesB >= 0.0))
-                    || ((priceC <= 0.0) & (poundsC >= 0.0) & (ouncesC >= 0.0)))
-            {
-                Toast toast = Toast.makeText( getApplicationContext(),
-                        "Price cannot be $0.00 for given weights",
-                        Toast.LENGTH_SHORT );
-                toast.show();
-                bestBuyEditText.setText( "Best buy: " );
-                return;
-            }
-
-            //computing unit prices of each item
+            unitPriceA = 0;
+            unitPriceB = 0;
+            unitPriceC = 0;
 
         }
     }
